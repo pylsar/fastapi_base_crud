@@ -17,6 +17,7 @@ class TaskOrm(Model):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	name: Mapped[str]
 	description: Mapped[Optional[str]]
+	is_completed: Mapped[bool] = mapped_column(default=False)
 
 
 # Создаем таблицу (взято из доки sqlalchemy)
