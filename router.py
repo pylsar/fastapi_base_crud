@@ -14,6 +14,10 @@ async def add_task(task: STaskAdd):
 	task_id = await TaskRepository.add_one(task)
 	return {"task_id": task_id}
 
+	# Получаем добавленную задачу и возвращаем её
+	# added_task = await TaskRepository.get_by_id(task_id)
+	# return added_task
+
 # читаем таску
 @router.get("")
 async def get_tasks() -> list[STask]:
