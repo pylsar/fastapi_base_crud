@@ -10,9 +10,7 @@ router = APIRouter(
 
 # создаем таску
 @router.post("")
-async def add_task( 
-	task: Annotated[STaskAdd, Depends()],
-):
+async def add_task(task: STaskAdd):
 	task_id = await TaskRepository.add_one(task)
 	return {"task_id": task_id}
 
