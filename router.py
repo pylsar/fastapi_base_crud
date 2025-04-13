@@ -38,6 +38,15 @@ async def update_task(
 	except ValueError as e:
 		raise HTTPException(status_code=404, detail=str(e))
 
+# обновляем состояние завершенности	
+@router.patch("/{task_id}/toggle")
+async def toggle_task_completion(task_id: int):
+    try:
+        task_id = await TaskRepository.toggle_completion(task_id)
+        return {"task_id": task_id}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
 # удаляем таску
 @router.delete("/{task_id}")
 async def delete_task(task_id: int):

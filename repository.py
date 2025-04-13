@@ -9,7 +9,6 @@ class TaskRepository:
 	async def add_one(cls, data:STaskAdd) -> int:
 		async with new_session() as session:
 			task_dict = data.model_dump()
-
 			task = TaskOrm(**task_dict)
 			session.add(task)
 			await session.flush()
@@ -22,8 +21,6 @@ class TaskRepository:
 			query = select(TaskOrm)
 			result = await session.execute(query)
 			task_models = result.scalars().all()
-			# task_schemas = [STask.model_validate(task_model) for task_model in task_models]
-			# return task_schemas
 			 # Преобразуем TaskOrm в словарь и валидируем с помощью STask
 			task_schemas = [
 				STask.model_validate({
@@ -38,7 +35,6 @@ class TaskRepository:
 
 
 # обновляем
-
 	@classmethod
 	async def update_one(cls, task_id: int, data: STaskAdd) -> int:
 		async with new_session() as session:
@@ -53,9 +49,26 @@ class TaskRepository:
 			# Обновляем данные задачи
 			task.name = data.name
 			task.description = data.description
+			# task.is_completed = data.is_completed
 
 			await session.commit()
-			return task_id		
+			return task_id	
+		
+# обновлем завершеность
+	@classmethod
+	async def toggle_completion(cls, task_id: int) -> int:
+		async with new_session() as session:
+			query = select(TaskOrm).where(TaskOrm.id == task_id)
+			result = await session.execute(query)
+			task = result.scalars().first()
+
+			if not task:
+				raise ValueError("Task not found")
+
+			# Переключаем статус
+			task.is_completed = not task.is_completed
+			await session.commit()
+			return task_id			
 
 # удаляем
 	@classmethod

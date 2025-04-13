@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 class STaskAdd(BaseModel):
-	name: str
+	name: Optional[str] = None
 	description: Optional[str] = None	
 	is_completed: bool = False
 
